@@ -1,0 +1,20 @@
+# Desconsiderar arquivos gerados pelo editor
+.vscode/
+.idea/
+
+# Desconsiderar arquivos de cache
+npm-cache/
+yarn-cache/
+
+# Desconsiderar arquivos gerados pela build
+build/
+dist/
+
+# Desconsiderar arquivos de dependências
+node_modules/
+
+# Desconsiderar arquivos de configuração local
+.env*
+
+# Desconsiderar arquivos de testes
+coverage/
