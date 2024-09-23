@@ -104,19 +104,27 @@ export class Blockchain{
   }
 
   verificarBloco(bloco: Bloco): boolean {
-     if(bloco.payload.hashAnterior !== this.hashUltimoBloco()){
+    if(bloco.payload.hashAnterior !== this.hashUltimoBloco()){
       console.error(`Bloco #${bloco.payload.sequencia} invalido:
         o hash anterior é ${this.hashUltimoBloco().slice(0,12)} e não ${bloco.payload.hashAnterior.slice(0,12)}`)
-        return false
-     }
-     const hashTeste: string = hash(hash(JSON.stringify(bloco.payload))+ bloco.header.nonce + 
-     bloco.header.nonce)
-     if(!hashValidado({hash:hashTeste, dificuldade:this.dificuldade, prefixo:this.prefixoPow})){
-        console.error(`Bloco #${bloco.payload.sequencia} invalido: Nonce ${bloco.header.nonce} é
-          invalido e não pode ser verificado`)
-          return false
-     }
-     return true
+      return false
+    }
+    
+    const hashBloco: string = hash(JSON.stringify(bloco.payload))
+    const hashPow: string = hash(hashBloco + bloco.header.nonce)
+    
+    if(!hashValidado({hash: hashPow, dificuldade: this.dificuldade, prefixo: this.prefixoPow})){
+      console.error(`Bloco #${bloco.payload.sequencia} invalido: Nonce ${bloco.header.nonce} é
+        invalido e não pode ser verificado`)
+      return false
+    }
+    
+    if (hashBloco !== bloco.header.hashBloco) {
+      console.error(`Bloco #${bloco.payload.sequencia} invalido: Hash do bloco não corresponde`)
+      return false
+    }
+    
+    return true
   }
 
   enviarBloco(bloco: Bloco): Bloco[]{
